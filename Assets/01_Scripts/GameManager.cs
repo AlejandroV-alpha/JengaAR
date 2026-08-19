@@ -7,10 +7,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public int playerCount = 2;
-    public string[] playerNames;
-
+  
     public int currentPlayer = 0;
-    public GameObject[] playerInputs;
+    public double turnTime = 15.0;
+    public  Player[] players { get; set; }
     private void Awake()
     {
         if (Instance == null)
@@ -24,10 +24,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SavePlayers(int count, string[] names)
+    public void SavePlayers(int count,double turntime, string[] names)
     {
         playerCount = count;
-        playerNames = names;
+        turnTime = turntime;
+        players = new Player[count] ;
+        for (int i = 0; i < count; i++)
+        {
+            players[i] = new Player { Name = names[i], Wins = 0, Losses = 0, times = new double[0] };
+        }
 
         currentPlayer = 0;
     }
@@ -39,7 +44,7 @@ public class GameManager : MonoBehaviour
 
     public string GetCurrentPlayerName()
     {
-        return playerNames[currentPlayer];
+        return players[currentPlayer].Name;
     }
 
     public void NextPlayer()
@@ -51,6 +56,12 @@ public class GameManager : MonoBehaviour
             currentPlayer = 0;
         }
     }
+    public void seePlayers()
+    {
+        for (int i = 0; i < playerCount; i++)
+        {
+            Debug.Log("Player " + (i + 1) + ": " + players[i].Name);
+        }
+    }
 
-  
 }
