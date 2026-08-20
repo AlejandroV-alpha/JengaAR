@@ -16,8 +16,17 @@ public class Block : MonoBehaviour
 
     [SerializeField]
     private float minimumRemovalDistance = 0.05f;
+    [SerializeField]
+    private float fullRemovalDistance = 0.3f; // distancia que debe recorrer para considerarse retirado por completo (ajústalo a la escala real de tus bloques)
+
+    private float currentDragDistance = 0f;
 
     private int currentFloor;
+
+
+    // --- NUEVO: campos para medir la torpeza del arrastre ---
+    private int dragCollisions = 0;
+    private float dragDrift = 0f;
 
     private void Start()
     {
@@ -84,6 +93,11 @@ public class Block : MonoBehaviour
             isDragging = true;
             blockWasMoved = false;
 
+            // --- NUEVO ---
+            dragCollisions = 0;
+            dragDrift = 0f;
+            currentDragDistance = 0f;
+
             initialTouchPosition = touchPosition;
             initialBlockPosition = transform.position;
 
@@ -126,12 +140,14 @@ public class Block : MonoBehaviour
 
         MoveBlock(targetPosition);
 
-        float distanceMoved = Vector3.Distance(initialBlockPosition, transform.position);
+        currentDragDistance = Vector3.Distance(initialBlockPosition, transform.position);
 
-        if (distanceMoved >= minimumRemovalDistance)
-        {
-            blockWasMoved = true;
-        }
+        //float distanceMoved = Vector3.Distance(initialBlockPosition, transform.position);
+
+        //if (distanceMoved >= minimumRemovalDistance)
+        //{
+        //    blockWasMoved = true;
+        //}
     }
 
     private void MoveBlock(Vector3 targetPosition)
@@ -159,6 +175,10 @@ public class Block : MonoBehaviour
             distance,
             QueryTriggerInteraction.Ignore))
         {
+            // --- NUEVO: registrar qué tan torpe fue este intento ---
+            dragCollisions++;
+            dragDrift += distance - hit.distance;
+
             float safeDistance = Mathf.Max(0.0f, hit.distance - 0.001f);
 
             transform.position =
@@ -194,23 +214,40 @@ public class Block : MonoBehaviour
 
         rb.isKinematic = false;
 
-        // Solo considerar retirado si realmente se movió
-        if (blockWasMoved)
-        {
-            Debug.Log(
-                "BLOQUE RETIRADO: " +
-                gameObject.name
-            );
+        //// Solo considerar retirado si realmente se movió
+        //if (blockWasMoved)
+        //{
+        //    Debug.Log(
+        //        "BLOQUE RETIRADO: " +
+        //        gameObject.name
+        //    );
 
-            JengaManager.Instance.MoveBlockToTop(this);
+        //    JengaManager.Instance.MoveBlockToTop(this, dragCollisions, dragDrift);
+        //}
+        //else
+        //{
+        //    Debug.Log(
+        //        "BLOQUE NO RETIRADO: " +
+        //        gameObject.name +
+        //        " | No se movió suficiente."
+        //    );
+        //}
+
+        if (currentDragDistance >= fullRemovalDistance)
+        {
+            Debug.Log("BLOQUE RETIRADO POR COMPLETO: " + gameObject.name);
+            JengaManager.Instance.MoveBlockToTop(this, dragCollisions, dragDrift);
+        }
+        else if (currentDragDistance >= minimumRemovalDistance)
+        {
+            Debug.Log("BLOQUE MOVIDO A MEDIAS: " + gameObject.name + " | Distancia: " + currentDragDistance);
+            JengaManager.Instance.CollapseTower();
         }
         else
         {
-            Debug.Log(
-                "BLOQUE NO RETIRADO: " +
-                gameObject.name +
-                " | No se movió suficiente."
-            );
+            // fue solo un toque: lo regresamos a su lugar
+            transform.position = initialBlockPosition;
+            Debug.Log("BLOQUE NO RETIRADO: " + gameObject.name + " | No se movió suficiente.");
         }
     }
 
@@ -223,4 +260,15 @@ public class Block : MonoBehaviour
     {
         return currentFloor;
     }
+
+
+    public void EnablePhysics()
+    {
+        if (TryGetComponent<Rigidbody>(out Rigidbody rb))
+        {
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
+    }
+
 }
