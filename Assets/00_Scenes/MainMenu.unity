@@ -424,6 +424,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1574159885}
   - {fileID: 283733567}
   - {fileID: 1212881873}
   - {fileID: 1791885137}
@@ -1850,8 +1851,10 @@ MonoBehaviour:
   ResumeText: {fileID: 1938001854}
   errorText: {fileID: 0}
   isResume: 1
+  isGameResume: 0
   settingsPanel: {fileID: 0}
   resumePanel: {fileID: 0}
+  mainPanel: {fileID: 0}
   turnTime: 15
   currentTurnTimeText: {fileID: 0}
 --- !u!1 &468264044
@@ -3179,8 +3182,10 @@ MonoBehaviour:
   ResumeText: {fileID: 0}
   errorText: {fileID: 1672324023}
   isResume: 0
+  isGameResume: 0
   settingsPanel: {fileID: 1212881872}
   resumePanel: {fileID: 1791885136}
+  mainPanel: {fileID: 0}
   turnTime: 15
   currentTurnTimeText: {fileID: 1032417425}
 --- !u!1 &954024364
@@ -5966,6 +5971,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1552769339}
   m_CullTransparentMesh: 1
+--- !u!1 &1574159884
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1574159885}
+  - component: {fileID: 1574159886}
+  m_Layer: 5
+  m_Name: MenuManager (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1574159885
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574159884}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 102421312}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1574159886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574159884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 667eb642d2f7c9e4396e2059bc239406, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuManager
+  players:
+  - {fileID: 304859172}
+  - {fileID: 1407720119}
+  - {fileID: 661196848}
+  - {fileID: 380343053}
+  - {fileID: 2062804843}
+  currentPlayerText: {fileID: 606608674}
+  playerCount: 2
+  ResumeText: {fileID: 0}
+  errorText: {fileID: 1672324023}
+  isResume: 0
+  isGameResume: 0
+  settingsPanel: {fileID: 1212881872}
+  resumePanel: {fileID: 1791885136}
+  mainPanel: {fileID: 283733566}
+  turnTime: 15
+  currentTurnTimeText: {fileID: 1032417425}
 --- !u!1 &1623087628
 GameObject:
   m_ObjectHideFlags: 0
@@ -7481,7 +7551,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerCount: 2
-  playerNames: []
   currentPlayer: 0
   turnTime: 15
 --- !u!4 &2146425954
